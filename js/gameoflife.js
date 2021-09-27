@@ -1,16 +1,61 @@
 function seed() {
   const args = arguments;
-  return args;
+  const result = [];
+  for(let i = 0; i < args.length; i++) {
+    result.push(args[i]);
+  }
+  return result;
 }
 
-function same([x, y], [j, k]) {}
+function same([x, y], [j, k]) {
+  return (x === j) && (y === k);
+}
 
 // The game state to search for `cell` is passed as the `this` value of the function.
-function contains(cell) {}
+function contains(cell) {
+  const state = this;
+  const [ cx, cy ] = cell;
+  for(let i = 0; i < state.length; i++) {
+    const [ x, y ] = state[i];
+    if(x === cx && y === cy) {
+      return true;
+    }
+  }
+  return false;
+}
 
-const printCell = (cell, state) => {};
+const printCell = (cell, state) => {
+  return contains.call(state, cell) ? '\u25A3' : '\u25A2';
+};
 
-const corners = (state = []) => {};
+const corners = (state = []) => {
+  console.log('\n------------------', state);
+  if(state.length === 0 || state === undefined) {
+    return [];
+  }
+  let minX=Number.MAX_SAFE_INTEGER, maxX=0, minY=Number.MAX_SAFE_INTEGER, maxY=0;
+  for(let i = 0; i < state.length; i++) {
+    const [ tempX, tempY ] = state[i];
+    if(tempX > maxX) {
+      maxX = tempX;
+    }
+    if(tempY > maxY) {
+      maxY = tempY;
+    }
+    if(tempY < minY) {
+      minY = tempY;
+    }
+    if(tempX < minX) {
+      minX = tempX;
+    }
+  }
+  console.log(minX, maxX, minY, maxY, '\n --')
+  return {
+    topRight: [ maxX, maxY ],
+    bottomLeft: [ minX, minY ]
+  }
+
+};
 
 const printCells = (state) => {};
 
@@ -64,7 +109,7 @@ const startPatterns = {
     }
   }
   
-  exports.seed = seed;
+  module.exports.seed = seed;
   exports.same = same;
   exports.contains = contains;
   exports.getNeighborsOf = getNeighborsOf;
